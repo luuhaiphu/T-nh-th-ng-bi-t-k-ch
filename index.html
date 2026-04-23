@@ -337,7 +337,7 @@
       <div class="field">
         <label>Doanh Thu FMCG</label>
         <div class="field-inner">
-          <input type="number" id="fmcg" placeholder="VD: 60000000" min="0" step="1000">
+          <input type="text" id="fmcg" placeholder="VD: 60,000,000" inputmode="numeric" autocomplete="off">
           <span class="field-unit">VNĐ</span>
         </div>
       </div>
@@ -449,8 +449,17 @@ function fmt(n) {
   return new Intl.NumberFormat('vi-VN').format(Math.round(n)) + ' VNĐ';
 }
 
+// Auto-format FMCG with thousand separators
+document.addEventListener("DOMContentLoaded", function() {
+  document.getElementById("fmcg").addEventListener("input", function() {
+    let raw = this.value.replace(/[^\d]/g, "");
+    if (raw === "") { this.value = ""; return; }
+    this.value = new Intl.NumberFormat("vi-VN").format(parseInt(raw));
+  });
+});
+
 function calculate() {
-  const fmcg  = parseFloat(document.getElementById('fmcg').value)  || 0;
+  const fmcg  = parseFloat(document.getElementById('fmcg').value.replace(/[^\d]/g, '')) || 0;
   const fresh = parseFloat(document.getElementById('fresh').value) || 0;
   const staff = parseInt(document.getElementById('staff').value)   || 1;
   const days  = parseInt(document.getElementById('days').value)    || 1;
